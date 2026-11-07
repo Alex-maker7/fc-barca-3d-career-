@@ -318,11 +318,14 @@ function startGame() {
  animate();
 }
 
+window.startGame = startGame;
+
 function resetBall() {
- ball.position.set(0,0.35,5);
- ballVelocity.set(0,0,0);
- hero.position.set(0,8,0);
-}
+  ball.position.set(0,0.35,5);
+  ballVelocity.set(0,0,0);
+  hero.position.set(0,8,0);
+
+
 
 function goal(team) {
  if(team==="home") scoreA++;
