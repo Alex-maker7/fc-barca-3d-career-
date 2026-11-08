@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,586 +6,169 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FC Barça 3D Career</title>
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: #07152c;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
+*{box-sizing:border-box}
+body{
+ margin:0;background:#07152c;color:white;
+ font-family:Arial;text-align:center;
 }
-
-h1 { color: #edc342; margin: 18px 5px; }
-
-#menu { padding: 15px; }
-
-select, button {
-  padding: 12px;
-  border-radius: 8px;
-  border: 0;
-  margin: 5px;
-  font-size: 15px;
+h1{color:#edc342}
+button,select{
+ padding:12px;margin:6px;border:0;
+ border-radius:8px;font-size:15px;
 }
-
-button {
-  background: #edc342;
-  color: #07152c;
-  font-weight: bold;
-  cursor: pointer;
+button{
+ background:#edc342;color:#07152c;
+ font-weight:bold;cursor:pointer;
 }
-
-button:hover { background: #ffe17b; }
-
-#game {
-  position: relative;
-  width: 95%;
-  max-width: 900px;
-  margin: auto;
+.panel{
+ max-width:650px;margin:20px auto;
+ padding:20px;background:#102747;
+ border-radius:15px;
 }
-
-canvas {
-  width: 100%;
-  display: block;
-  border-radius: 12px;
+.hidden{display:none}
+#game{width:95%;max-width:900px;margin:auto;position:relative}
+canvas{width:100%;display:block}
+#score{
+ position:absolute;top:10px;left:50%;
+ transform:translateX(-50%);
+ background:#07152cee;padding:10px;
+ border-radius:8px;z-index:2;
 }
-
-#score {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #07152cdd;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: bold;
-  z-index: 2;
-  white-space: nowrap;
+#message{
+ position:absolute;top:45%;width:100%;
+ color:#edc342;font-size:30px;
+ font-weight:bold;pointer-events:none;
 }
-
-#message {
-  position: absolute;
-  top: 45%;
-  width: 100%;
-  font-size: 30px;
-  font-weight: bold;
-  color: #edc342;
-  text-shadow: 2px 2px #000;
-  pointer-events: none;
-  z-index: 3;
-}
-
-#help { color: #ddd; font-size: 14px; padding: 10px; }
-
-#error {
-  color: #ff7777;
-  padding: 12px;
-}
+label{display:block;margin:12px}
 </style>
 </head>
 <body>
 
 <h1>🔵🔴 FC BARÇA 3D CAREER</h1>
 
-<div id="menu">
-  <h3>🏆 ELIGE TU EQUIPO</h3>
-  <select id="team">
-    <option value="barca">FC Barcelona</option>
-    <option value="madrid">Real Madrid</option>
-    <option value="atleti">Atlético Madrid</option>
-    <option value="girona">Girona</option>
-    <option value="sevilla">Sevilla</option>
-    <option value="city">Manchester City</option>
-    <option value="psg">PSG</option>
-    <option value="bayern">Bayern Múnich</option>
-    <option value="liverpool">Liverpool</option>
-    <option value="arsenal">Arsenal</option>
-    <option value="inter">Inter</option>
-    <option value="juve">Juventus</option>
-  </select>
-
-  <h3>⚔️ ELIGE TU RIVAL</h3>
-  <select id="rival">
-    <option value="madrid">Real Madrid</option>
-    <option value="barca">FC Barcelona</option>
-    <option value="atleti">Atlético Madrid</option>
-    <option value="girona">Girona</option>
-    <option value="sevilla">Sevilla</option>
-    <option value="city">Manchester City</option>
-    <option value="psg">PSG</option>
-    <option value="bayern">Bayern Múnich</option>
-    <option value="liverpool">Liverpool</option>
-    <option value="arsenal">Arsenal</option>
-    <option value="inter">Inter</option>
-    <option value="juve">Juventus</option>
-  </select>
-  <br>
-  <button id="startButton">⚽ EMPEZAR PARTIDO</button>
+<div id="menu" class="panel">
+<h2>🏟️ MENÚ PRINCIPAL</h2>
+<button onclick="show('match')">⚽ JUGAR PARTIDO</button>
+<button onclick="show('career')">🏆 MODO CARRERA</button>
+<button onclick="show('tournaments')">🌍 TORNEOS</button>
+<button onclick="show('settings')">⚙️ AJUSTES</button>
 </div>
 
+<div id="match" class="panel hidden">
+<h2>ELIGE TU PARTIDO</h2>
+<label>Tu equipo
+<select id="team">
+<option value="barca">FC Barcelona</option>
+<option value="madrid">Real Madrid</option>
+<option value="atleti">Atlético Madrid</option>
+<option value="girona">Girona</option>
+<option value="city">Manchester City</option>
+<option value="psg">PSG</option>
+<option value="bayern">Bayern Múnich</option>
+<option value="liverpool">Liverpool</option>
+<option value="arsenal">Arsenal</option>
+</select></label>
+<label>Rival
+<select id="rival">
+<option value="madrid">Real Madrid</option>
+<option value="barca">FC Barcelona</option>
+<option value="atleti">Atlético Madrid</option>
+<option value="city">Manchester City</option>
+<option value="psg">PSG</option>
+<option value="bayern">Bayern Múnich</option>
+</select></label>
+<button onclick="startGame()">EMPEZAR PARTIDO</button>
+<button onclick="show('menu')">VOLVER</button>
+</div>
+
+<div id="settings" class="panel hidden">
+<h2>⚙️ AJUSTES</h2>
+<label>Duración
+<select id="duration">
+<option value="180">3 minutos</option>
+<option value="300">5 minutos</option>
+<option value="600" selected>10 minutos</option>
+<option value="900">15 minutos</option>
+<option value="1800">30 minutos</option>
+<option value="5400">90 minutos</option>
+</select></label>
+<label>Dificultad
+<select id="difficulty">
+<option>Fácil</option>
+<option selected>Normal</option>
+<option>Difícil</option>
+</select></label>
+<label>Cámara
+<select id="cameraMode">
+<option>Cerca</option>
+<option selected>Lejos</option>
+</select></label>
+<label>Sonido
+<select id="sound">
+<option value="on">Activado</option>
+<option value="off">Desactivado</option>
+</select></label>
+<button onclick="saveSettings()">GUARDAR AJUSTES</button>
+<button onclick="show('menu')">VOLVER</button>
+<p id="saved"></p>
+</div>
+
+<div id="career" class="panel hidden">
+<h2>🏆 MODO CARRERA</h2>
+<p>Próximamente: temporadas, fichajes y clasificación.</p>
+<button onclick="show('menu')">VOLVER</button>
+</div>
+
+<div id="tournaments" class="panel hidden">
+<h2>🏆 TORNEOS</h2>
+<p>Champions League y competiciones de liga.</p>
+<div style="font-size:75px">🏆</div>
+<button onclick="show('menu')">VOLVER</button>
+</div>
+
+<div id="gameScreen" class="hidden">
 <div id="game">
-  <div id="score">BARÇA 0 - 0 MADRID | 00:00</div>
-  <div id="message"></div>
+<div id="score">0 - 0 | 00:00</div>
+<div id="message"></div>
+</div>
+<p>WASD: Mover | SHIFT: Correr | ESPACIO: Chutar</p>
+<button onclick="exitGame()">SALIR DEL PARTIDO</button>
 </div>
 
-<p id="help">
-  WASD: Mover | SHIFT: Correr | ESPACIO: Chutar
-</p>
-
-<div id="error"></div>
-
-<script type="module">
-import * as THREE from
-'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
-
-const teams = {
-  barca: {name:"BARÇA", color:0x1646aa},
-  madrid: {name:"MADRID", color:0xffffff},
-  atleti: {name:"ATLÉTICO", color:0xd71920},
-  girona: {name:"GIRONA", color:0xd71920},
-  sevilla: {name:"SEVILLA", color:0xffffff},
-  city: {name:"MAN CITY", color:0x6cabdd},
-  psg: {name:"PSG", color:0x17346b},
-  bayern: {name:"BAYERN", color:0xc90020},
-  liverpool: {name:"LIVERPOOL", color:0xc8102e},
-  arsenal: {name:"ARSENAL", color:0xef0107},
-  inter: {name:"INTER", color:0x1246a0},
-  juve: {name:"JUVENTUS", color:0xeeeeee}
-};
-
-let scene, camera, renderer;
-let hero, ball, keeper1, keeper2, referee;
-let allies = [], enemies = [];
-let keys = {};
-
-let scoreA = 0;
-let scoreB = 0;
-let seconds = 0;
-let running = false;
-let shotCooldown = 0;
-
-let ballVelocity = new THREE.Vector3();
-let playerColor, enemyColor;
-
-const clock = new THREE.Clock();
-const game = document.getElementById("game");
-
-function makePlayer(x, z, color, kind = "player") {
-  const group = new THREE.Group();
-
-  const shirt = new THREE.Mesh(
-    new THREE.CylinderGeometry(
-      kind === "keeper" ? 0.42 : 0.38,
-      0.42, 1.15, 16
-    ),
-    new THREE.MeshStandardMaterial({color})
-  );
-
-  shirt.position.y = 0.85;
-  group.add(shirt);
-
-  const head = new THREE.Mesh(
-    new THREE.SphereGeometry(0.27, 16, 16),
-    new THREE.MeshStandardMaterial({color:0xffc99c})
-  );
-
-  head.position.y = 1.62;
-  group.add(head);
-
-  const legs = new THREE.Mesh(
-    new THREE.BoxGeometry(0.48, 0.35, 0.32),
-    new THREE.MeshStandardMaterial({color:0xeeeeee})
-  );
-
-  legs.position.y = 0.22;
-  group.add(legs);
-
-  group.position.set(x, 0, z);
-  group.userData.kind = kind;
-  scene.add(group);
-
-  return group;
+<script>
+function show(id){
+ document.querySelectorAll('.panel,#gameScreen')
+ .forEach(e=>e.classList.add('hidden'));
+ document.getElementById(id).classList.remove('hidden');
 }
-
-function makeGoal(z) {
-  const material = new THREE.MeshStandardMaterial({
-    color: 0xffffff
-  });
-
-  const post = (x, y, h) => {
-    const m = new THREE.Mesh(
-      new THREE.BoxGeometry(0.15, h, 0.15),
-      material
-    );
-    m.position.set(x, y, z);
-    scene.add(m);
-  };
-
-  post(-1.8, 1.2, 2.4);
-  post(1.8, 1.2, 2.4);
-
-  const bar = new THREE.Mesh(
-    new THREE.BoxGeometry(3.75, 0.15, 0.15),
-    material
-  );
-
-  bar.position.set(0, 2.4, z);
-  scene.add(bar);
+function saveSettings(){
+ localStorage.setItem('fcSettings',JSON.stringify({
+ duration:document.getElementById('duration').value,
+ difficulty:document.getElementById('difficulty').value,
+ camera:document.getElementById('cameraMode').value,
+ sound:document.getElementById('sound').value
+ }));
+ document.getElementById('saved').textContent='✅ ¡Ajustes guardados!';
 }
-
-function createField() {
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x87ceeb);
-
-  const w = game.clientWidth;
-  const h = w * 520 / 900;
-
-  camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 1000);
-
-  renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setSize(w, h);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  game.appendChild(renderer.domElement);
-
-  scene.add(new THREE.HemisphereLight(
-    0xffffff, 0x456b35, 2
-  ));
-
-  const light = new THREE.DirectionalLight(0xffffff, 2);
-  light.position.set(5, 15, 10);
-  scene.add(light);
-
-  // Césped
-  const grass = new THREE.Mesh(
-    new THREE.PlaneGeometry(24, 40),
-    new THREE.MeshStandardMaterial({color:0x238b36})
-  );
-
-  grass.rotation.x = -Math.PI / 2;
-  scene.add(grass);
-
-  // Líneas del campo
-  const white = new THREE.MeshBasicMaterial({
-    color: 0xffffff
-  });
-
-  function line(x, z, w, h) {
-    const m = new THREE.Mesh(
-      new THREE.BoxGeometry(w, 0.035, h),
-      white
-    );
-    m.position.set(x, 0.025, z);
-    scene.add(m);
-  }
-
-  line(0, 0, 24, 0.12);
-  line(0, -20, 24, 0.12);
-  line(0, 20, 24, 0.12);
-  line(-12, 0, 0.12, 40);
-  line(12, 0, 0.12, 40);
-  line(0, 0, 0.12, 40);
-
-  const circle = new THREE.Mesh(
-    new THREE.RingGeometry(4.95, 5.05, 64),
-    white
-  );
-
-  circle.rotation.x = -Math.PI / 2;
-  circle.position.y = 0.03;
-  scene.add(circle);
-
-  makeGoal(-20);
-  makeGoal(20);
-
-  // Áreas
-  line(0, -16, 9, 0.08);
-  line(0, 16, 9, 0.08);
-  line(-4.5, -18, 0.08, 4);
-  line(4.5, -18, 0.08, 4);
-  line(-4.5, 18, 0.08, 4);
-  line(4.5, 18, 0.08, 4);
-
-  // Árbitro
-  referee = makePlayer(3, 0, 0x171717, "referee");
-
-  // Balón
-  ball = new THREE.Mesh(
-    new THREE.SphereGeometry(0.35, 24, 24),
-    new THREE.MeshStandardMaterial({color:0xffffff})
-  );
-
-  ball.position.set(0, 0.35, 5);
-  scene.add(ball);
+const saved=JSON.parse(localStorage.getItem('fcSettings')||'{}');
+if(saved.duration)duration.value=saved.duration;
+if(saved.difficulty)difficulty.value=saved.difficulty;
+if(saved.camera)cameraMode.value=saved.camera;
+if(saved.sound)sound.value=saved.sound;
+function startGame(){
+ show('gameScreen');
+ document.getElementById('message').textContent=
+ '⚽ ¡PREPARADOS PARA JUGAR!';
 }
-
-function startGame() {
-  try {
-    document.getElementById("error").textContent = "";
-
-    running = false;
-
-    if (renderer) {
-      renderer.dispose();
-      renderer.domElement.remove();
-      renderer = null;
-    }
-
-    game.innerHTML =
-      '<div id="score">0 - 0 | 00:00</div>' +
-      '<div id="message"></div>';
-
-    const a = teams[document.getElementById("team").value];
-    const b = teams[document.getElementById("rival").value];
-
-    playerColor = a.color;
-    enemyColor = b.color;
-
-    scoreA = 0;
-    scoreB = 0;
-    seconds = 0;
-    shotCooldown = 0;
-
-    allies = [];
-    enemies = [];
-    keys = {};
-
-    ballVelocity.set(0, 0, 0);
-
-    createField();
-
-    // Jugador principal
-    hero = makePlayer(0, 8, playerColor);
-    allies.push(hero);
-
-    // Compañeros
-    allies.push(makePlayer(-5, 4, playerColor));
-    allies.push(makePlayer(5, 2, playerColor));
-    allies.push(makePlayer(-4, -4, playerColor));
-
-    // Rivales
-    enemies.push(makePlayer(0, -7, enemyColor));
-    enemies.push(makePlayer(-5, -4, enemyColor));
-    enemies.push(makePlayer(5, -5, enemyColor));
-    enemies.push(makePlayer(0, -12, enemyColor));
-
-    // Porteros
-    keeper1 = makePlayer(0, -18, 0xf4d03f, "keeper");
-    keeper2 = makePlayer(0, 18, 0xf4d03f, "keeper");
-
-    document.getElementById("score").textContent =
-      a.name + " 0 - 0 " + b.name + " | 00:00";
-
-    camera.position.set(0, 15, 25);
-    camera.lookAt(0, 0, 0);
-
-    running = true;
-    clock.start();
-    animate();
-
-  } catch (error) {
-    running = false;
-    document.getElementById("error").textContent =
-      "Error al iniciar: " + error.message;
-    console.error(error);
-  }
-}
-
-// El botón puede acceder a esta función.
-window.startGame = startGame;
-document.getElementById("startButton").addEventListener(
-  "click", startGame
-);
-
-function resetBall() {
-  ball.position.set(0, 0.35, 5);
-  ballVelocity.set(0, 0, 0);
-  hero.position.set(0, 8, 0);
-}
-
-function goal(team) {
-  if (team === "home") scoreA++;
-  else scoreB++;
-
-  const msg = document.getElementById("message");
-
-  msg.textContent = team === "home"
-    ? "⚽ ¡GOOOOOOL!"
-    : "⚽ ¡GOL DEL RIVAL!";
-
-  setTimeout(() => {
-    if (msg.isConnected) msg.textContent = "";
-  }, 1800);
-
-  resetBall();
-}
-
-function animate() {
-  if (!running) return;
-
-  requestAnimationFrame(animate);
-
-  const dt = Math.min(clock.getDelta(), 0.04);
-  const speed = keys.ShiftLeft || keys.ShiftRight ? 9 : 5;
-  const move = speed * dt;
-
-  // Movimiento del jugador
-  if (keys.KeyW) hero.position.z -= move;
-  if (keys.KeyS) hero.position.z += move;
-  if (keys.KeyA) hero.position.x -= move;
-  if (keys.KeyD) hero.position.x += move;
-
-  hero.position.x = THREE.MathUtils.clamp(
-    hero.position.x, -11, 11
-  );
-
-  hero.position.z = THREE.MathUtils.clamp(
-    hero.position.z, -19, 19
-  );
-
-  // Rivales persiguen el balón
-  enemies.forEach(p => {
-    const dx = ball.position.x - p.position.x;
-    const dz = ball.position.z - p.position.z;
-    const d = Math.hypot(dx, dz);
-
-    if (d > 0.8 && d < 15) {
-      p.position.x += dx / d * 2.5 * dt;
-      p.position.z += dz / d * 2.5 * dt;
-    }
-  });
-
-  // Compañeros siguen al jugador
-  allies.slice(1).forEach((p, i) => {
-    const targetX = hero.position.x + (i - 1) * 3;
-    const targetZ = hero.position.z - 3 - i * 2;
-
-    p.position.x += (targetX - p.position.x) * dt * 0.7;
-    p.position.z += (targetZ - p.position.z) * dt * 0.7;
-  });
-
-  // Porteros
-  keeper1.position.x = THREE.MathUtils.clamp(
-    ball.position.x, -1.3, 1.3
-  );
-
-  keeper2.position.x = THREE.MathUtils.clamp(
-    ball.position.x, -1.3, 1.3
-  );
-
-  // Árbitro
-  referee.position.x +=
-    (ball.position.x - referee.position.x) * dt * 0.25;
-
-  referee.position.z +=
-    (ball.position.z + 2 - referee.position.z) * dt * 0.25;
-
-  // Disparo
-  if (keys.Space && shotCooldown <= 0) {
-    const d = hero.position.distanceTo(ball.position);
-
-    if (d < 2.5) {
-      ballVelocity.set(
-        (ball.position.x - hero.position.x) * 2,
-        1.5,
-        -13
-      );
-
-      shotCooldown = 0.5;
-    }
-  }
-
-  shotCooldown = Math.max(0, shotCooldown - dt);
-
-  // Física del balón
-  ballVelocity.y -= 9.8 * dt;
-  ball.position.addScaledVector(ballVelocity, dt);
-  ballVelocity.multiplyScalar(0.99);
-
-  if (ball.position.y < 0.35) {
-    ball.position.y = 0.35;
-    ballVelocity.y = Math.abs(ballVelocity.y) * 0.35;
-
-    if (ballVelocity.y < 0.3) ballVelocity.y = 0;
-  }
-
-  // Límites laterales
-  if (Math.abs(ball.position.x) > 11.5) {
-    ballVelocity.x *= -0.7;
-    ball.position.x = Math.sign(ball.position.x) * 11.5;
-  }
-
-  // Paradas de los porteros
-  [keeper1, keeper2].forEach(k => {
-    if (ball.position.distanceTo(k.position) < 1.2) {
-      ballVelocity.z *= -0.8;
-      ballVelocity.x +=
-        (ball.position.x - k.position.x) * 3;
-      ballVelocity.y = 2;
-    }
-  });
-
-  // Goles
-  if (
-    Math.abs(ball.position.x) < 1.8 &&
-    ball.position.y < 2.5
-  ) {
-    if (ball.position.z < -20) goal("home");
-    if (ball.position.z > 20) goal("away");
-  }
-
-  // Marcador y tiempo
-  seconds += dt;
-
-  const min = String(Math.floor(seconds / 60)).padStart(2, "0");
-  const sec = String(Math.floor(seconds % 60)).padStart(2, "0");
-
-  document.getElementById("score").textContent =
-    teams[document.getElementById("team").value].name +
-    " " + scoreA + " - " + scoreB + " " +
-    teams[document.getElementById("rival").value].name +
-    " | " + min + ":" + sec;
-
-  // Cámara
-  camera.position.x +=
-    (hero.position.x * 0.35 - camera.position.x) * dt * 3;
-
-  camera.position.z +=
-    (hero.position.z + 17 - camera.position.z) * dt * 3;
-
-  camera.lookAt(
-    hero.position.x, 0, hero.position.z - 4
-  );
-
-  renderer.render(scene, camera);
-}
-
-// Controles del teclado
-window.addEventListener("keydown", e => {
-  keys[e.code] = true;
-
-  if (["Space", "ArrowUp", "ArrowDown"].includes(e.code)) {
-    e.preventDefault();
-  }
-});
-
-window.addEventListener("keyup", e => {
-  keys[e.code] = false;
-});
-
-// Ajustar el campo al tamaño de la pantalla
-window.addEventListener("resize", () => {
-  if (!renderer || !camera) return;
-
-  const w = game.clientWidth;
-  const h = w * 520 / 900;
-
-  renderer.setSize(w, h);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-});
-
+function exitGame(){show('menu')}
 </script>
 </body>
 </html>
+Importante: esta es la base del menú y los ajustes; todavía no incluye el motor del partido 3D ni los saques. No quiero decirte que está terminado si aún no lo está.
+
+Guárdalo como index.html en GitHub. Después podemos incorporar el motor 3D completo sin romper el menú. ❤️
+
+
+ChatGPT is AI and can make mistakes.
 
 
