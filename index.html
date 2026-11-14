@@ -163,24 +163,32 @@ if(settings.camera)cameraMode.value=settings.camera;
 if(settings.sound)sound.value=settings.sound;
 
 let gameModule=null;
-function startGame(){
+async function startGame(){
  show('gameScreen');
- document.getElementById('message').textContent='¡A JUGAR!';
- if(gameModule)gameModule.dispose();
- import('./football.js').then(m=>{
+
+ const message=document.getElementById('message');
+ message.textContent='⚽ CARGANDO PARTIDO...';
+
+ try{
+   if(gameModule)gameModule.dispose();
+
+   const m=await import('./football.js');
    gameModule=m;
+
    m.startFootball({
      container:document.getElementById('game'),
-     team:team.value,
-     rival:rival.value,
-     duration:Number(duration.value),
-     camera:cameraMode.value
+     team:document.getElementById('team').value,
+     rival:document.getElementById('rival').value,
+     duration:Number(document.getElementById('duration').value),
+     camera:document.getElementById('cameraMode').value
    });
- }).catch(()=> {
-   document.getElementById('message').textContent=
-   'No se pudo cargar el motor 3D';
- });
+
+ }catch(error){
+   console.error(error);
+   message.textContent='ERROR: '+error.message;
+ }
 }
+
 function exitGame(){
  if(gameModule)gameModule.dispose();
  gameModule=null;
